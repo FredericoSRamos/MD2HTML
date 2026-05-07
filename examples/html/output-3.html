@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"
+><title>Compiled Markdown</title>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: #24292f;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 32px;
+        background-color: #ffffff;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        margin-top: 24px;
+        margin-bottom: 16px;
+        font-weight: 600;
+        line-height: 1.25;
+    }
+    h1, h2 {
+        padding-bottom: 0.3em;
+        border-bottom: 1px solid #d0d7de;
+    }
+    a {
+        color: #0969da;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    pre {
+        background-color: #f6f8fa;
+        border-radius: 6px;
+        padding: 16px;
+        overflow: auto;
+        font-size: 85%;
+    }
+    hr {
+        height: 0.25em;
+        padding: 0;
+        margin: 24px 0;
+        background-color: #d0d7de;
+        border: 0;
+    }
+    blockquote {
+        margin: 0;
+        padding: 0 1em;
+        color: #57606a;
+        border-left: 0.25em solid #d0d7de;
+    }
+    blockquote p {
+        margin-bottom: 0;
+    }
+    code {
+        font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+        font-size: 85%;
+        background-color: rgba(175, 184, 193, 0.2);
+        padding: 0.2em 0.4em;
+        border-radius: 6px;
+    }
+    pre code {
+        background-color: transparent;
+        padding: 0;
+        font-size: 100%;
+    }
+    table {
+        border-spacing: 0;
+        border-collapse: collapse;
+        margin-top: 0;
+        margin-bottom: 16px;
+        width: max-content;
+        max-width: 100%;
+    }
+    table th, table td {
+        padding: 6px 13px;
+        border: 1px solid #d0d7de;
+    }
+    table tr:nth-child(2n) {
+        background-color: #f6f8fa;
+    }
+    ol, ul {
+        padding-left: 2em;
+        margin-bottom: 16px;
+    }
+    p {
+        margin-top: 0;
+        margin-bottom: 16px;
+    }
+</style>
+</head>
+<body>
+<h1>Lista de Filmes</h1>
+<p>Uma aplicação web full-stack completa que permite aos usuários descobrir filmes, gerenciar uma lista de favoritos pessoal e compartilhá-la com o mundo.</p>
+<blockquote>
+  <p><strong>A aplicação está disponível para acesso em:</strong> <a href="https://movies-list-mmk6.onrender.com/">**https://movies-list-mmk6.onrender.com/**</a></p>
+</blockquote>
+<hr>
+<h2>Sobre o Projeto</h2>
+<p>A aplicação permite que qualquer visitante pesquise filmes através da API do The Movie Database (TMDb). Para funcionalidades personalizadas, como criar uma lista de favoritos, o usuário pode se cadastrar e fazer login. Cada usuário possui uma lista de favoritos única, que pode ser compartilhada através de um link público.</p>
+<p>A interface foi projetada para ser limpa e intuitiva, com um sistema de notificações dinâmicas que fornece feedback em tempo real sobre as ações do usuário.</p>
+<hr>
+<h2>Funcionalidades</h2>
+<p><em>   </em><em>Autenticação de Usuários:</em>* Sistema seguro de Registro e Login utilizando JSON Web Tokens (JWT). <em>   </em><em>Pesquisa de Filmes (Pública):</em>* Qualquer visitante pode buscar filmes e ver detalhes como pôster, data de lançamento e nota. <em>   </em><em>Lista de Favoritos Individual:</em>* Usuários logados podem adicionar ou remover filmes da sua lista de favoritos pessoal. <em>   </em><em>Persistência de Dados:</em>* As informações de usuários e filmes favoritos são salvas em um banco de dados SQLite. <em>   </em><em>Link de Compartilhamento:</em>* Cada usuário tem um link público único para sua lista de favoritos, com um botão "Copiar" para facilitar o compartilhamento. <em>   </em><em>Notificações Dinâmicas:</em>* Feedbacks visuais (sucesso, erro, informação) substituem os alertas padrão do navegador, melhorando a experiência do usuário. <em>   </em><em>Design Consistente:</em>* O layout dos cards de filmes se mantém alinhado e consistente, independentemente do tamanho do título ou da ausência de imagem.</p>
+<hr>
+<h2>Tecnologias Utilizadas</h2>
+<p>Este projeto é dividido em duas partes principais: o front-end (cliente) e o back-end (servidor).</p>
+<h4><strong>Front-End (Client-side)</strong></h4>
+<p><em>   </em><em>React:</em>* Biblioteca para construção da interface de usuário. <em>   </em><em>React Router:</em>* Para gerenciamento de rotas e navegação. <em>   </em><em>Axios:</em>* Para realizar as chamadas HTTP para o back-end. <em>   </em><em>React Context:</em>* Para gerenciamento de estado global, utilizado no sistema de notificações.</p>
+<h4><strong>Back-End (Server-side)</strong></h4>
+<p><em>   </em><em>Node.js:</em>* Ambiente de execução JavaScript no servidor. <em>   </em><em>Express.js:</em>* Framework para a construção da API REST. <em>   </em><em>Knex.js:</em>* Query builder para facilitar a comunicação com o banco de dados. <em>   </em><em>SQLite3:</em>* Banco de dados relacional leve e baseado em arquivo. <em>   </em><em>JSON Web Token (JWT):</em>* Para a implementação do sistema de autenticação. <em>   </em><em>Bcrypt.js:</em>* Para a criptografia (hash) das senhas dos usuários. <em>   </em><em>Dotenv:</em>* Para gerenciamento de variáveis de ambiente.</p>
+<hr>
+<h2>Como Executar o Projeto Localmente</h2>
+<p>Siga os passos abaixo para configurar e rodar a aplicação na sua máquina.</p>
+<h3><strong>Pré-requisitos</strong></h3>
+<p><em>   </em><em>Node.js</em><em> (versão 16 ou superior) e </em><em>npm</em>*. <em>   </em><em>Git</em>* instalado. <em>   Uma </em><em>Chave de API do The Movie Database (TMDb)</em>*. Você pode obter uma gratuitamente <a href="https://www.themoviedb.org/signup">aqui</a>.</p>
+<h3><strong>1. Clone o Repositório</strong></h3>
+<pre><code>bash
+git clone https://github.com/FredericoSRamos/Movies-List.git
+cd Movies-List</code></pre>
+<h3><strong>2. Configure o Back-End</strong></h3>
+<p>Navegue até a pasta do servidor, instale as dependências e configure as variáveis de ambiente.</p>
+<pre><code>bash
+# Navegue para a pasta do back-end
+cd backend
+
+# Instale as dependências
+npm install</code></pre>
+<p>Agora, crie um arquivo chamado <code>.env</code> na raiz da pasta <code>backend</code> e adicione as seguintes variáveis:</p>
+<pre><code># backend/.env
+
+# Sua chave de API v3 do TMDb | Ex: TMDB_API_KEY=CHAVE123
+TMDB_API_KEY=SUA_CHAVE_DE_API_DO_TMDB_AQUI
+
+# Um segredo qualquer para gerar os tokens JWT | Ex: JWT_SECRET=F123HE432F66E3Y
+JWT_SECRET=SEU_SEGREDO_ALEATORIO_AQUI</code></pre>
+<p>Por fim, execute a migração do banco de dados para criar as tabelas necessárias:</p>
+<pre><code>bash
+npx knex migrate:latest --knexfile knexfile.js</code></pre>
+<h3><strong>3. Configure o Front-End</strong></h3>
+<p>Em um <strong>novo terminal</strong>, navegue até a pasta do cliente, instale as dependências e configure a variável de ambiente.</p>
+<pre><code>bash
+# Navegue para a pasta do front-end (a partir da raiz do projeto)
+cd frontend
+
+# Instale as dependências
+npm install</code></pre>
+<h3><strong>4. Execute a Aplicação</strong></h3>
+<p>Você precisará de <strong>dois terminais</strong> abertos para rodar o back-end e o front-end simultaneamente.</p>
+<p><em>   </em><em>No terminal do Back-End (pasta `/backend`):</em>*</p>
+<pre><code>bash
+    npm start</code></pre>
+<p><em>O servidor será iniciado em `http://localhost:5000`.</em></p>
+<p><em>   </em><em>No terminal do Front-End (pasta `/frontend`):</em>*</p>
+<pre><code>bash
+    npm start</code></pre>
+<p><em>A aplicação React será iniciada e abrirá automaticamente em `http://localhost:3000` no seu navegador.</em></p>
+<p>Pronto! Agora você pode se registrar, buscar filmes e criar sua lista de favoritos.</p>
+</body>
+</html>

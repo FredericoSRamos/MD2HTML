@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"
+><title>Compiled Markdown</title>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: #24292f;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 32px;
+        background-color: #ffffff;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        margin-top: 24px;
+        margin-bottom: 16px;
+        font-weight: 600;
+        line-height: 1.25;
+    }
+    h1, h2 {
+        padding-bottom: 0.3em;
+        border-bottom: 1px solid #d0d7de;
+    }
+    a {
+        color: #0969da;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    pre {
+        background-color: #f6f8fa;
+        border-radius: 6px;
+        padding: 16px;
+        overflow: auto;
+        font-size: 85%;
+    }
+    hr {
+        height: 0.25em;
+        padding: 0;
+        margin: 24px 0;
+        background-color: #d0d7de;
+        border: 0;
+    }
+    blockquote {
+        margin: 0;
+        padding: 0 1em;
+        color: #57606a;
+        border-left: 0.25em solid #d0d7de;
+    }
+    blockquote p {
+        margin-bottom: 0;
+    }
+    code {
+        font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+        font-size: 85%;
+        background-color: rgba(175, 184, 193, 0.2);
+        padding: 0.2em 0.4em;
+        border-radius: 6px;
+    }
+    pre code {
+        background-color: transparent;
+        padding: 0;
+        font-size: 100%;
+    }
+    table {
+        border-spacing: 0;
+        border-collapse: collapse;
+        margin-top: 0;
+        margin-bottom: 16px;
+        width: max-content;
+        max-width: 100%;
+    }
+    table th, table td {
+        padding: 6px 13px;
+        border: 1px solid #d0d7de;
+    }
+    table tr:nth-child(2n) {
+        background-color: #f6f8fa;
+    }
+    ol, ul {
+        padding-left: 2em;
+        margin-bottom: 16px;
+    }
+    p {
+        margin-top: 0;
+        margin-bottom: 16px;
+    }
+</style>
+</head>
+<body>
+<h1>EasyMart</h1>
+<p>A supermarket price comparison app. Scrapes product and pricing data from three local supermarkets and exposes it through a searchable, filterable web UI.</p>
+<p>It can be easily expanded to any market that suits your needs. Market web applications usually follow one of the two patterns already covered here: a public API (like Instabuy) or simple token-based authentication per request (like VIP Commerce). Find the API your target market uses, define its categories, and drop in a new scraper class, the rest of the pipeline picks it up automatically.</p>
+<h2>Adding a new market</h2>
+<ol>
+  <li><strong>Find the API.</strong> Open the market's website, check the network tab while browsing products. Look for JSON responses, most platforms expose a REST API, often under <code>/api/</code> or a subdomain like <code>api.market.com</code>.</li>
+  <li><strong>Create a scraper.</strong> If the market uses a public API with no auth, subclass <code>BaseScraper</code> directly (see <code>market_365.py</code>). If it requires login + session token, subclass <code>VIPCommerceScraper</code> (see <code>bramil.py</code> or <code>royal.py</code>) and fill in the abstract properties:</li>
+</ol>
+<pre><code>python
+    # backend/markets/scrapers/mymarket.py
+    from .vip_base import VIPCommerceScraper
+
+    class MyMarketScraper(VIPCommerceScraper):
+        API_BASE   = "https://api.mymarket.com/v1"
+        ORG_ID     = 123
+        DOMAIN_KEY = "mymarket.com.br"
+        FILIAL_ID  = 1
+        DIST_ID    = 1
+        MARKET_NAME  = "My Market"
+        MARKET_SLUG  = "mymarket"
+        DEPARTMENTS  = ["Bebidas", "Carnes", "Mercearia", ...]</code></pre>
+<ol>
+  <li><strong>Register it.</strong> Add the scraper to <code>SCRAPERS</code> in <code>scrape_all.py</code> and to <code>SCRAPER_REGISTRY</code> in <code>scrape_market.py</code>, and add a seed entry in <code>reset_db.py</code> so <code>reset_db</code> creates its categories.</li>
+  <li><strong>Seed and scrape.</strong></li>
+</ol>
+<pre><code>bash
+    python manage.py reset_db
+    python manage.py scrape_market --market mymarket</code></pre>
+<p>The new market and its products will appear in the UI immediately, no frontend changes needed.</p>
+<h2>Stack</h2>
+<ul>
+  <li><strong>Backend</strong> — Django + Django REST Framework, SQLite</li>
+  <li><strong>Frontend</strong> — React 19, TypeScript, Tailwind CSS v4, Vite</li>
+  <li><strong>Testing</strong> — pytest + Hypothesis (backend), Vitest + fast-check (frontend)</li>
+</ul>
+<h2>Supermarkets</h2>
+<table>
+<thead>
+<tr>
+  <th>Market</th>
+  <th>Platform</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>365 Supermercados</td>
+  <td>Instabuy API</td>
+</tr>
+<tr>
+  <td>Bramil Supermercados</td>
+  <td>VIP Commerce</td>
+</tr>
+<tr>
+  <td>Royal Supermercados</td>
+  <td>VIP Commerce</td>
+</tr>
+</tbody>
+</table>
+<h2>Features</h2>
+<ul>
+  <li>Search products across all markets simultaneously</li>
+  <li>Filter by market, category, and promotions</li>
+  <li>Sort by price (asc/desc) or name</li>
+  <li>Browse by market with per-market category sidebar</li>
+  <li>Paginated product grid (12 per page)</li>
+</ul>
+<h2>Project Structure</h2>
+<pre><code>backend/
+  config/          Django settings, URLs, WSGI/ASGI
+  markets/
+    models.py      Market, Category, Product, ScrapeLog
+    views.py       DRF viewsets + filters
+    serializers.py
+    scrapers/      market_365.py, vip_base.py, bramil.py, royal.py
+    management/
+      commands/    scrape_all, scrape_market, reset_db, clean_db
+    tests/
+
+frontend/
+  src/
+    pages/         ProductsPage, SupermarketsPage
+    components/    Layout, ProductCard, CategorySidebar, SearchBar, ...
+    services/      api.ts (axios client)
+    utils/         formatPrice, formatRelativeTime, categoryIcon
+    context/       SearchContext</code></pre>
+<h2>Setup</h2>
+<h3>Backend</h3>
+<pre><code>bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py reset_db   # creates DB and seeds categories
+python manage.py runserver</code></pre>
+<h3>Frontend</h3>
+<pre><code>bash
+cd frontend
+npm install
+npm run dev</code></pre>
+<p>The frontend dev server proxies <code>/api</code> requests to <code>http://localhost:8000</code>.</p>
+<h2>Scraping</h2>
+<p>Run all scrapers in parallel (clears DB first):</p>
+<pre><code>bash
+python manage.py scrape_all</code></pre>
+<p>Scrape a single market:</p>
+<pre><code>bash
+python manage.py scrape_market --market 365
+python manage.py scrape_market --market bramil
+python manage.py scrape_market --market royal</code></pre>
+<p>Dry run (skip DB clear):</p>
+<pre><code>bash
+python manage.py scrape_all --dry-run</code></pre>
+<h2>API</h2>
+<p>Base URL: <code>http://localhost:8000/api/</code></p>
+<table>
+<thead>
+<tr>
+  <th>Endpoint</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>GET /api/markets/</code></td>
+  <td>List markets</td>
+</tr>
+<tr>
+  <td><code>GET /api/categories/</code></td>
+  <td>List categories (filter: <code>?market__slug=</code>)</td>
+</tr>
+<tr>
+  <td><code>GET /api/products/</code></td>
+  <td>List products (see filters below)</td>
+</tr>
+</tbody>
+</table>
+<p>Product filters: <code>?search=</code>, <code>?market_slug=</code>, <code>?market_ids=1,2</code>, <code>?category_id=</code>, <code>?on_promo=true</code>, <code>?ordering=price</code> / <code>-price</code> / <code>name</code> / <code>-name</code></p>
+<h2>Tests</h2>
+<p>Project is fully covered with unit tests to help catch errors and asserts no fixed issues return.</p>
+<pre><code>bash
+# Backend
+cd backend &amp;&amp; .venv/Scripts/python -m pytest
+
+# Frontend
+cd frontend &amp;&amp; npm test</code></pre>
+</body>
+</html>
