@@ -1,0 +1,42 @@
+﻿Produções;Regras Semânticas
+document → blocks;"{document.val : ""<html><head>…</head><body>"" + join(blocks.val) + ""</body></html>""}"
+blocks → blocks block;{blocks.val : blocks₁.val.append(block.val)}
+blocks → block;{blocks.val : [block.val]}
+block → header | list | ordered_list | paragraph | code_block | table | hr | blockquote | empty_block;{block.val : p[1].val}
+empty_block → DBL_NEWLINE | NEWLINE;"{empty_block.val : """"}"
+header → HASH inline_elements DBL_NEWLINE | HASH inline_elements NEWLINE | HASH inline_elements;"{level : min(HASH.val, 6); header.val : ""<h"" + level + "">"" + inline_elements.val.strip() + ""</h"" + level + "">\n""}"
+list → list_items;"{list.val : ""<ul>\n"" + join(list_items.val) + ""</ul>\n""}"
+list_items → list_items list_item;{list_items.val : list_items₁.val.append(list_item.val)}
+list_items → list_item;{list_items.val : [list_item.val]}
+list_item → DASH inline_elements DBL_NEWLINE | DASH inline_elements NEWLINE | DASH inline_elements;"{list_item.val : "" <li>"" + inline_elements.val.strip() + ""</li>\n""}"
+ordered_list → ordered_list_items;"{ordered_list.val : ""<ol>\n"" + join(ordered_list_items.val) + ""</ol>\n""}"
+ordered_list_items → ordered_list_items ordered_list_item;{ordered_list_items.val : ordered_list_items₁.val.append(ordered_list_item.val)}
+ordered_list_items → ordered_list_item;{ordered_list_items.val : [ordered_list_item.val]}
+ordered_list_item →ORDERED_LIST_MARKER inline_elements DBL_NEWLINE | ORDERED_LIST_MARKER inline_elements NEWLINE | ORDERED_LIST_MARKER inline_elements;"{ordered_list_item.val : "" <li>"" + inline_elements.val.strip() + ""</li>\n""}"
+paragraph → para_content DBL_NEWLINE | para_content;"{paragraph.val : se para_content.val ≠ """" então ""<p>"" + para_content.val.strip() + ""</p>\n"" senão """"}"
+para_content → para_content NEWLINE inline_elements;"{para_content.val : para_content₁.val + "" "" + inline_elements.val}"
+para_content → para_content NEWLINE;"{para_content.val : para_content₁.val + "" ""}"
+para_content → inline_elements;{para_content.val : inline_elements.val}
+inline_elements → inline_elements inline_element;{inline_elements.val : inline_elements₁.val + inline_element.val}
+inline_elements → inline_element;{inline_elements.val : inline_element.val}
+inline_element → TEXT;{inline_element.val : TEXT.val}
+inline_element → BOLD;"{inline_element.val : ""<strong>"" + BOLD.val + ""</strong>""}"
+inline_element → ITALIC;"{inline_element.val : ""<em>"" + ITALIC.val + ""</em>""}"
+inline_element → STRIKE;"{inline_element.val : ""<del>"" + STRIKE.val + ""</del>""}"
+inline_element → LINK;"{inline_element.val : ""<a href=\"""" + LINK.url + ""\"">"" + LINK.texto + ""</a>""}"
+inline_element → IMAGE;"{inline_element.val : ""<img src=\"""" + IMAGE.src + ""\"" alt=\"""" + IMAGE.alt + ""\"">""}"
+inline_element → CODE_INLINE;"{inline_element.val : ""<code>"" + CODE_INLINE.val + ""</code>""}"
+code_block → CODE_BLOCK DBL_NEWLINE | CODE_BLOCK NEWLINE | CODE_BLOCK;"{code_block.val : ""<pre><code>"" + CODE_BLOCK.val + ""</code></pre>\n""} "
+hr →  HR DBL_NEWLINE | HR NEWLINE | HR;"{hr.val : ""<hr>\n""}"
+blockquote → blockquote_lines DBL_NEWLINE | blockquote_lines NEWLINE | blockquote_lines;"{blockquote.val : ""<blockquote><p>"" + blockquote_lines.val.strip() + ""</p></blockquote>\n""}"
+blockquote_lines → blockquote_lines NEWLINE blockquote_line;"{blockquote_lines.val : blockquote_lines₁.val + "" "" + blockquote_line.val}"
+blockquote_lines → blockquote_line;{blockquote_lines.val : blockquote_line.val}
+blockquote_line → BLOCKQUOTE_MARKER inline_elements;"{blockquote_line.val : inline_elements.val} (descarta o marcador "">"")"
+table →  table_rows DBL_NEWLINE |table_rows NEWLINE | table_rows;{se rows[1] é separador (---) então gera <thead> com <th> para rows[0] gera <tbody> com <td> para rows[2..] senão gera <tbody> com <td> para todas as rows}
+table_rows → table_rows table_row;{table_rows.val : table_rows₁.val.append(table_row.val)}
+table_rows → table_row;{table_rows.val : [table_row.val]}
+table_row → PIPE table_cells PIPE NEWLINE | PIPE table_cells PIPE;{table_row.val : table_cells.val}
+table_cells → table_cells PIPE cell_content;{table_cells.val : table_cells₁.val.append(cell_content.val)}
+table_cells → cell_content;{table_cells.val : [cell_content.val]}
+cell_content → inline_elements;{cell_content.val : inline_elements.val}
+cell_content → ε;"{cell_content.val : """"}"
